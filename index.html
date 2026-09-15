@@ -204,7 +204,13 @@
   .cover-title-wrap h1 .hl{ color:var(--pink-deep); }
   .cover-sub{ margin-top:12px; display:inline-flex; align-items:center; gap:8px; font-size:16px; opacity:.85; }
   .cover-sub .leaf{ color:var(--green-deep); }
-  .cover-cat{ position:relative; z-index:2; width:168px; margin-top:8px; animation:floaty 4.5s ease-in-out infinite; }
+  .cover-cat{ position:relative; z-index:2; margin-top:10px; animation:floaty 4.5s ease-in-out infinite; }
+  .cover-cat img{
+    height:292px; width:auto; display:block;
+    border-radius:18px; border:4px solid #FFFDF7;
+    box-shadow:0 14px 30px -12px rgba(91,70,50,.5);
+    transform:rotate(-2deg); background:#FFFDF7;
+  }
   @keyframes floaty{ 0%,100%{transform:translateY(0) rotate(-2deg);} 50%{transform:translateY(-9px) rotate(2deg);} }
 
   /* 封面右下折角 */
@@ -269,6 +275,8 @@
     .scroll{ padding:48px 22px 56px 38px; }
     .controls{ gap:12px; }
     .ctrl-btn{ padding:7px 16px; font-size:17px; }
+    .cover-title-wrap{ margin-top:56px; }
+    .cover-cat img{ height:210px; }
   }
 </style>
 </head>
@@ -344,7 +352,7 @@
           <h1>小月子<br>维护<span class="hl">手册</span></h1>
           <div class="cover-sub"><svg width="15" height="15" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-2px"><use href="#leaf"/></svg> 陪伴 · 照护 · 康复 <svg width="15" height="15" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-2px"><use href="#leaf"/></svg></div>
         </div>
-        <svg class="cover-cat" viewBox="0 0 220 200"><use href="#cat"/></svg>
+        <div class="cover-cat"><img src="images/cat5.jpg" alt="三花猫"></div>
       </div>
       <div class="fold" id="coverFold"><div class="curl"></div></div>
     </section>
