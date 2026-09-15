@@ -9,619 +9,818 @@
 <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Long+Cang&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 <style>
   :root{
-    --beige: #FBF3E4;
-    --beige-2: #F6EAD3;
-    --cream: #FFFDF7;
-    --green: #CFE8CF;
-    --green-deep: #8FC29A;
-    --pink: #FADBD8;
-    --pink-deep: #F2A6A0;
-    --ink: #7A5C43;
-    --ink-deep: #5B4632;
-    --orange: #E8A87C;
-    --cat-black: #5A4A42;
+    --beige:#FBF3E4; --beige-2:#F6EAD3; --cream:#FFFDF7;
+    --green:#CFE8CF; --green-deep:#8FC29A; --green-ink:#4C7A57;
+    --pink:#FADBD8; --pink-deep:#F2A6A0; --pink-ink:#B96A63;
+    --orange:#E8A87C; --ink:#7A5C43; --ink-deep:#5B4632;
   }
-
   *{ margin:0; padding:0; box-sizing:border-box; }
-
+  html,body{ height:100%; }
   body{
     min-height:100vh;
     background:
       radial-gradient(circle at 15% 20%, rgba(242,166,160,.14), transparent 40%),
       radial-gradient(circle at 85% 80%, rgba(143,194,154,.16), transparent 45%),
       linear-gradient(160deg, #FDF8EC 0%, #F7F1E1 45%, #F1EAD6 100%);
-    font-family: "ZCOOL XiaoWei", "Kaiti", "STKaiti", "KaiTi", serif;
-    color: var(--ink);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    padding:40px 16px 70px;
-    position:relative;
-    overflow-x:hidden;
+    font-family:"ZCOOL XiaoWei","Kaiti","STKaiti","KaiTi",serif;
+    color:var(--ink);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:36px 14px 26px; position:relative; overflow-x:hidden;
   }
 
-  /* 背景手绘点缀 */
-  .bg-doodle{ position:fixed; opacity:.5; pointer-events:none; z-index:0; }
-  .bg-doodle.svg{ width:38px; height:38px; }
-
-  /* 场景 */
-  .scene{
-    position:relative;
-    z-index:2;
-    perspective:2600px;
-  }
+  .scene{ position:relative; z-index:2; perspective:2800px; }
 
   .book{
     position:relative;
-    width:min(420px, 88vw);
-    height:min(580px, 74vh);
-    transform: rotate(-1.5deg);
-    transition: transform .6s ease;
+    width:min(460px, 92vw);
+    height:min(660px, 82vh);
   }
-  .book:hover{ transform: rotate(0deg); }
 
-  /* 书本底座阴影 */
   .book-shadow{
-    position:absolute;
-    left:4%; right:-4%; bottom:-26px;
-    height:44px;
-    background: radial-gradient(ellipse at center, rgba(91,70,50,.28), transparent 70%);
-    border-radius:50%;
-    filter: blur(6px);
-    z-index:0;
+    position:absolute; left:3%; right:-3%; bottom:-24px; height:44px;
+    background:radial-gradient(ellipse at center, rgba(91,70,50,.28), transparent 70%);
+    border-radius:50%; filter:blur(6px); z-index:0;
   }
 
-  /* 书页 */
-  .page{
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    border-radius:6px 22px 22px 6px;
-    overflow:hidden;
-    box-shadow:
-      inset 0 0 0 1px rgba(122,92,67,.08),
-      0 22px 46px -18px rgba(91,70,50,.45);
-  }
-
-  /* 左侧装订线 */
-  .page::before{
-    content:"";
-    position:absolute;
-    top:0; bottom:0; left:18px;
-    width:1px;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(122,92,67,.35) 0 5px,
-      transparent 5px 9px
-    );
-    z-index:3;
-  }
-
-  /* ------- 目录页（在封面下方） ------- */
-  .page.toc{
-    z-index:1;
-    background:
-      linear-gradient(rgba(251,243,228,.55), rgba(251,243,228,.55)),
-      repeating-linear-gradient(
-        to bottom,
-        var(--cream) 0 34px,
-        #F3E9D5 34px 35px
-      );
-  }
-  .toc-inner{
-    position:relative;
-    padding:52px 44px 40px 58px;
-    height:100%;
-    display:flex;
-    flex-direction:column;
-  }
-  .toc-head{
-    text-align:center;
-    margin-bottom:22px;
-  }
-  .toc-head .kicker{
-    font-family:"Long Cang", cursive;
-    font-size:16px;
-    color:var(--green-deep);
-    letter-spacing:3px;
-  }
-  .toc-head h2{
-    font-family:"Ma Shan Zheng", cursive;
-    font-size:44px;
-    color:var(--ink-deep);
-    line-height:1.1;
-    position:relative;
-    display:inline-block;
-  }
-  .toc-head h2::after{
-    content:"";
-    position:absolute;
-    left:8%; right:8%; bottom:-6px;
-    height:8px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='8' viewBox='0 0 120 8'%3E%3Cpath d='M2 5 Q 30 1 60 5 T 118 5' stroke='%23F2A6A0' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
-  }
-
-  .toc-list{
-    list-style:none;
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-evenly;
-  }
-  .toc-list li{
-    display:flex;
-    align-items:baseline;
-    gap:14px;
-    font-size:20px;
-    color:var(--ink-deep);
-    cursor:pointer;
-    position:relative;
-    transition: transform .25s ease, color .25s ease;
-  }
-  .toc-list li:hover{
-    transform: translateX(6px);
-    color: var(--green-deep);
-  }
-  .toc-list .num{
-    font-family:"Ma Shan Zheng", cursive;
-    font-size:26px;
-    width:34px;
-    height:34px;
-    flex:none;
-    border-radius:50% 45% 55% 48%;
-    background:var(--green);
-    color:#fff;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    transform: rotate(-6deg);
-  }
-  .toc-list li:nth-child(even) .num{ background:var(--pink-deep); transform: rotate(5deg); }
-  .toc-list .t{
-    flex:1;
-    font-weight:bold;
-  }
-  .toc-list .t small{
-    display:block;
-    font-family:"ZCOOL XiaoWei", serif;
-    font-weight:normal;
-    font-size:14px;
-    color:var(--ink);
-    opacity:.75;
-    margin-top:2px;
-  }
-  .toc-list .dots{
-    flex:none;
-    border-bottom:2px dotted rgba(122,92,67,.4);
-    min-width:26px;
-    align-self:flex-end;
-    margin-bottom:6px;
-  }
-  .toc-list .pg{
-    flex:none;
-    font-family:"Long Cang", cursive;
-    font-size:20px;
-    color:var(--ink);
-  }
-
-  .toc-cat{
-    position:absolute;
-    right:20px; bottom:10px;
-    width:86px;
-    opacity:.95;
-  }
-
-  /* ------- 封面（最上层） ------- */
-  .page.cover{
-    z-index:2;
+  /* ===== 书页（sheet） ===== */
+  .sheet{
+    position:absolute; top:0; left:0; width:100%; height:100%;
     transform-origin:left center;
-    transform-style:preserve-3d;
     backface-visibility:hidden;
-    transition: transform 1.25s cubic-bezier(.4,.1,.2,1);
+    -webkit-backface-visibility:hidden;
+    transition:transform 1.05s cubic-bezier(.4,.1,.2,1);
+    border-radius:6px 24px 24px 6px;
+    box-shadow:inset 0 0 0 1px rgba(122,92,67,.08), 0 22px 46px -18px rgba(91,70,50,.45);
+    overflow:hidden;
+  }
+  .sheet.turned{ transform:rotateY(-180deg); }
+  .sheet.front,.sheet.pending{ transform:rotateY(0deg); }
+  .book.no-anim .sheet{ transition:none; }
+  .sheet.front{ pointer-events:auto; }
+  .sheet.turned,.sheet.pending{ pointer-events:none; }
+
+  /* 装订线 */
+  .sheet::before{
+    content:""; position:absolute; top:0; bottom:0; left:16px; width:1px; z-index:6;
+    background:repeating-linear-gradient(to bottom, rgba(122,92,67,.35) 0 5px, transparent 5px 9px);
+    pointer-events:none;
+  }
+  /* 右侧书页厚度 */
+  .sheet::after{
+    content:""; position:absolute; top:8px; bottom:8px; right:4px; width:4px; z-index:6;
+    background:repeating-linear-gradient(to bottom, #EFE3C9 0 2px, #E6D8BB 2px 4px);
+    border-radius:2px; opacity:.7; pointer-events:none;
+  }
+
+  /* ===== 纸张底纹 ===== */
+  .paper{
+    position:absolute; inset:0;
+    background:linear-gradient(rgba(251,243,228,.55), rgba(251,243,228,.55)),
+               repeating-linear-gradient(to bottom, var(--cream) 0 32px, #F3E9D5 32px 33px);
+  }
+
+  .frame{
+    position:absolute; inset:12px; z-index:5;
+    border:2.5px dashed rgba(143,194,154,.45); border-radius:10px 20px 20px 10px; pointer-events:none;
+  }
+  .frame.pink{ border-color:rgba(242,166,160,.45); }
+
+  /* 和纸胶带 */
+  .tape{ position:absolute; width:118px; height:32px; z-index:7; opacity:.85; }
+  .tape.g{ background:rgba(207,232,207,.8); }
+  .tape.p{ background:rgba(250,219,216,.85); }
+  .tape::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background:rgba(255,255,255,.5); }
+  .tape.tl{ top:-7px; left:24px; transform:rotate(-6deg); }
+  .tape.tr{ top:14px; right:18px; transform:rotate(7deg); }
+
+  /* ===== 页面通用排版 ===== */
+  .page{
+    position:relative; width:100%; height:100%; display:flex; flex-direction:column; z-index:4;
+  }
+  .scroll{
+    flex:1; overflow-y:auto; overflow-x:hidden;
+    padding:56px 30px 64px 44px;
+    scrollbar-width:thin; scrollbar-color:var(--green-deep) transparent;
+  }
+  .scroll::-webkit-scrollbar{ width:7px; }
+  .scroll::-webkit-scrollbar-thumb{ background:var(--green-deep); border-radius:10px; }
+
+  .chap-head{ text-align:center; margin-bottom:18px; }
+  .chap-num{
+    font-family:"Ma Shan Zheng",cursive; font-size:22px; color:#fff;
+    width:44px; height:44px; margin:0 auto 6px;
+    border-radius:48% 45% 55% 48%; background:var(--green-deep);
+    display:flex; align-items:center; justify-content:center; transform:rotate(-6deg);
+    box-shadow:0 4px 10px -4px rgba(76,122,87,.5);
+  }
+  .chap-num.pink{ background:var(--pink-deep); transform:rotate(5deg); }
+  .chap-head h2{
+    font-family:"Ma Shan Zheng",cursive; font-weight:normal;
+    font-size:34px; color:var(--ink-deep); line-height:1.1;
+  }
+  .chap-head .sub{
+    font-family:"Long Cang",cursive; font-size:15px; color:var(--green-ink); letter-spacing:2px; margin-top:3px;
+  }
+  .rule{
+    height:8px; margin:6px auto 0; width:150px;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='8' viewBox='0 0 120 8'%3E%3Cpath d='M2 5 Q 30 1 60 5 T 118 5' stroke='%23F2A6A0' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+  }
+
+  .sec{ margin-bottom:16px; }
+  .sec-title{
+    font-family:"Ma Shan Zheng",cursive; font-size:19px; color:var(--ink-deep);
+    display:flex; align-items:center; gap:8px; margin-bottom:8px;
+  }
+  .sec-title .dot{
+    width:10px; height:10px; border-radius:50%; background:var(--green-deep); flex:none;
+  }
+  .sec-title.pink .dot{ background:var(--pink-deep); }
+  .sec-title.orange .dot{ background:var(--orange); }
+
+  .card{
+    background:rgba(255,253,247,.85); border:2px dashed rgba(143,194,154,.5);
+    border-radius:12px; padding:12px 14px; position:relative;
+  }
+  .card.pink{ border-color:rgba(242,166,160,.55); background:rgba(255,250,248,.9); }
+
+  .list{ list-style:none; }
+  .list li{ position:relative; padding-left:22px; margin-bottom:6px; font-size:15px; line-height:1.5; }
+  .list li::before{
+    content:""; position:absolute; left:2px; top:7px; width:10px; height:10px;
+    border-radius:50%; background:var(--green-deep); opacity:.8;
+  }
+  .list.pink li::before{ background:var(--pink-deep); }
+  .list li b{ color:var(--ink-deep); }
+
+  .pill{ display:inline-block; padding:2px 10px; border-radius:20px; font-size:13px; margin:2px 3px 2px 0; }
+  .pill.good{ background:var(--green); color:var(--green-ink); }
+  .pill.bad{ background:var(--pink); color:var(--pink-ink); }
+  .pill.warn{ background:#FBEBD0; color:#9A6B1F; }
+
+  .tbl{ width:100%; border-collapse:collapse; font-size:13px; }
+  .tbl th,.tbl td{ border:1.5px dashed rgba(122,92,67,.28); padding:6px 8px; text-align:left; vertical-align:top; }
+  .tbl th{ background:var(--green); color:var(--green-ink); font-family:"Ma Shan Zheng",cursive; font-weight:normal; font-size:14px; }
+  .tbl.pink th{ background:var(--pink); color:var(--pink-ink); }
+  .tbl td b{ color:var(--ink-deep); }
+
+  .note{
+    background:#FDF3D9; border:2px dashed rgba(232,168,124,.6); border-radius:12px;
+    padding:10px 14px; font-size:14px; line-height:1.55;
+  }
+  .note b{ color:var(--ink-deep); }
+
+  .doodle{ position:absolute; z-index:5; font-size:20px; color:var(--pink-deep); opacity:.5; pointer-events:none; }
+  .doodle.g{ color:var(--green-deep); }
+
+  .pagenum{
+    position:absolute; right:22px; bottom:12px; z-index:8;
+    font-family:"Long Cang",cursive; font-size:18px; color:var(--ink); opacity:.7;
+  }
+
+  /* ===== 封面 ===== */
+  .cover-bg{
     background:
       radial-gradient(circle at 80% 12%, rgba(207,232,207,.5), transparent 40%),
       linear-gradient(165deg, #FBF3E4 0%, #F8EEDB 60%, #F4E7D0 100%);
   }
-  .book.open .page.cover{
-    transform: rotateY(-178deg);
-  }
-
   .cover-inner{
-    position:relative;
-    width:100%; height:100%;
-    padding:0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
+    position:relative; width:100%; height:100%; z-index:4;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
   }
-
-  /* 书封边框（手绘虚线） */
-  .cover-frame{
-    position:absolute;
-    inset:16px;
-    border:2.5px dashed rgba(143,194,154,.55);
-    border-radius:10px 20px 20px 10px;
-    pointer-events:none;
-  }
-
-  /* 和纸胶带 */
-  .tape{
-    position:absolute;
-    width:120px; height:34px;
-    top:-8px;
-    opacity:.85;
-  }
-  .tape.t1{ left:26px; transform:rotate(-6deg); background:rgba(207,232,207,.75); }
-  .tape.t2{ right:22px; transform:rotate(7deg); background:rgba(250,219,216,.8); top:22px; }
-  .tape::after{
-    content:"";
-    position:absolute; left:0; right:0; bottom:0; height:1px;
-    background:rgba(255,255,255,.5);
-  }
-
-  .cover-title-wrap{
-    margin-top:86px;
-    position:relative;
-    z-index:2;
-  }
-  .cover-title-wrap .pre{
-    font-family:"Long Cang", cursive;
-    font-size:20px;
-    color:var(--green-deep);
-    letter-spacing:4px;
-    margin-bottom:6px;
-  }
+  .cover-title-wrap{ margin-top:78px; position:relative; z-index:2; }
+  .cover-title-wrap .pre{ font-family:"Long Cang",cursive; font-size:19px; color:var(--green-deep); letter-spacing:4px; margin-bottom:6px; }
   .cover-title-wrap h1{
-    font-family:"Ma Shan Zheng", cursive;
-    font-weight:normal;
-    font-size:clamp(44px, 12vw, 62px);
-    color:var(--ink-deep);
-    line-height:1.16;
-    text-shadow:0 2px 0 rgba(255,255,255,.6);
-    letter-spacing:2px;
+    font-family:"Ma Shan Zheng",cursive; font-weight:normal;
+    font-size:clamp(42px, 11vw, 60px); color:var(--ink-deep); line-height:1.18;
+    text-shadow:0 2px 0 rgba(255,255,255,.6); letter-spacing:2px;
   }
-  .cover-title-wrap h1 .hl{
-    color:var(--pink-deep);
-  }
-  .cover-sub{
-    margin-top:12px;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    font-size:16px;
-    color:var(--ink);
-    opacity:.85;
-  }
-  .cover-sub .leaf{ color:var(--green-deep); font-size:18px; }
-
-  /* 猫咪 */
-  .cover-cat{
-    position:relative;
-    z-index:2;
-    width:170px;
-    margin-top:10px;
-    animation: floaty 4.5s ease-in-out infinite;
-  }
-  @keyframes floaty{
-    0%,100%{ transform: translateY(0) rotate(-2deg); }
-    50%{ transform: translateY(-9px) rotate(2deg); }
-  }
-
-  .cover-doodles{
-    position:absolute; inset:0; pointer-events:none; z-index:1;
-  }
-  .doodle{
-    position:absolute;
-    font-size:22px;
-    color:var(--pink-deep);
-    opacity:.6;
-    animation: twinkle 3.2s ease-in-out infinite;
-  }
-  .doodle.g{ color:var(--green-deep); }
-  @keyframes twinkle{
-    0%,100%{ opacity:.35; transform: scale(.9) rotate(0deg); }
-    50%{ opacity:.8; transform: scale(1.12) rotate(8deg); }
-  }
-
-  .cover-foot{
-    position:absolute;
-    left:0; right:0; bottom:30px;
-    z-index:2;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:8px;
-  }
-  .cover-foot .slogan{
-    font-family:"Long Cang", cursive;
-    font-size:19px;
-    letter-spacing:5px;
-    color:var(--ink);
-  }
+  .cover-title-wrap h1 .hl{ color:var(--pink-deep); }
+  .cover-sub{ margin-top:12px; display:inline-flex; align-items:center; gap:8px; font-size:16px; opacity:.85; }
+  .cover-sub .leaf{ color:var(--green-deep); }
+  .cover-cat{ position:relative; z-index:2; width:168px; margin-top:8px; animation:floaty 4.5s ease-in-out infinite; }
+  @keyframes floaty{ 0%,100%{transform:translateY(0) rotate(-2deg);} 50%{transform:translateY(-9px) rotate(2deg);} }
+  .cover-foot{ position:absolute; left:0; right:0; bottom:30px; z-index:2; }
+  .cover-foot .slogan{ font-family:"Long Cang",cursive; font-size:18px; letter-spacing:5px; }
   .cover-foot .slogan span{ color:var(--pink-deep); margin:0 2px; }
 
-  /* 右下角翻页角 */
-  .flip-corner{
-    position:absolute;
-    right:-2px; bottom:-2px;
-    width:74px; height:74px;
-    z-index:5;
-    cursor:pointer;
-  }
-  .flip-corner .curl{
-    position:absolute;
-    right:0; bottom:0;
-    width:0; height:0;
-    border-style:solid;
-    border-width:0 0 70px 70px;
+  /* 封面右下折角 */
+  .fold{ position:absolute; right:0; bottom:0; width:70px; height:70px; z-index:9; cursor:pointer; }
+  .fold .curl{
+    position:absolute; right:0; bottom:0; width:0; height:0;
+    border-style:solid; border-width:0 0 66px 66px;
     border-color:transparent transparent #F6EAD3 transparent;
-    filter: drop-shadow(-3px -3px 4px rgba(91,70,50,.25));
-    transition: transform .3s ease;
+    filter:drop-shadow(-3px -3px 4px rgba(91,70,50,.25)); transition:transform .3s ease;
   }
-  .flip-corner .curl::before{
-    content:"";
-    position:absolute;
-    left:6px; bottom:-70px;
-    width:58px; height:58px;
-    border-radius:50%;
-    background: radial-gradient(circle at 30% 30%, #FFFDF7, #F6EAD3);
-    box-shadow: inset 0 0 0 1px rgba(122,92,67,.12);
+  .fold .curl::before{
+    content:""; position:absolute; left:6px; bottom:-66px; width:54px; height:54px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #FFFDF7, #F6EAD3); box-shadow:inset 0 0 0 1px rgba(122,92,67,.12);
   }
-  .flip-corner:hover .curl{ transform: translate(-6px,6px) rotate(6deg); }
-  .flip-corner .hint-txt{
-    position:absolute;
-    right:14px; bottom:12px;
-    font-family:"Long Cang", cursive;
-    font-size:16px;
-    color:var(--ink);
-    transform: rotate(-8deg);
-    pointer-events:none;
-  }
+  .fold:hover .curl{ transform:translate(-5px,5px) rotate(6deg); }
+  .fold .txt{ position:absolute; right:12px; bottom:10px; font-family:"Long Cang",cursive; font-size:15px; color:var(--ink); transform:rotate(-8deg); pointer-events:none; }
 
-  /* 封面被翻开后隐藏翻页角 */
-  .book.open .flip-corner{ opacity:0; pointer-events:none; transition:opacity .3s ease .9s; }
+  /* ===== 目录 ===== */
+  .toc-list{ list-style:none; display:flex; flex-direction:column; justify-content:space-evenly; flex:1; padding:16px 6px 0; }
+  .toc-list li{ display:flex; align-items:baseline; gap:12px; font-size:19px; color:var(--ink-deep); margin-bottom:4px; }
+  .toc-list .num{
+    font-family:"Ma Shan Zheng",cursive; font-size:24px; width:32px; height:32px; flex:none;
+    border-radius:50% 45% 55% 48%; background:var(--green); color:#fff;
+    display:inline-flex; align-items:center; justify-content:center; transform:rotate(-6deg);
+  }
+  .toc-list li:nth-child(even) .num{ background:var(--pink-deep); transform:rotate(5deg); }
+  .toc-list .t{ flex:1; font-weight:bold; }
+  .toc-list .t small{ display:block; font-size:13px; font-weight:normal; color:var(--ink); opacity:.7; }
+  .toc-list .dots{ flex:none; border-bottom:2px dotted rgba(122,92,67,.4); min-width:20px; align-self:flex-end; margin-bottom:6px; }
+  .toc-list .pg{ flex:none; font-family:"Long Cang",cursive; font-size:19px; }
 
-  /* 翻页阴影 */
-  .page.cover::after{
-    content:"";
-    position:absolute; inset:0;
-    background: linear-gradient(90deg, transparent 55%, rgba(91,70,50,.22));
-    opacity:0;
-    transition: opacity .4s ease;
-    pointer-events:none;
-  }
-  .book.open .page.cover::after{ opacity:0; }
+  /* 封底 */
+  .back-inner{ position:relative; width:100%; height:100%; z-index:4; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px; }
+  .back-inner .big{ font-family:"Ma Shan Zheng",cursive; font-size:40px; color:var(--ink-deep); line-height:1.4; }
+  .back-inner .big .hl{ color:var(--pink-deep); }
+  .back-inner .line{ font-family:"Long Cang",cursive; font-size:19px; color:var(--ink); letter-spacing:3px; margin-top:12px; }
+  .back-cat{ width:130px; margin-top:22px; opacity:.95; }
 
-  /* 目录页上的"回封面"按钮 */
-  .back-btn{
-    position:absolute;
-    left:50%; bottom:18px;
-    transform:translateX(-50%);
-    font-family:"Ma Shan Zheng", cursive;
-    font-size:18px;
-    color:var(--ink-deep);
-    background:var(--pink);
-    border:2px dashed rgba(242,166,160,.7);
-    border-radius:30px;
-    padding:6px 20px;
-    cursor:pointer;
-    opacity:0;
-    transition:opacity .4s ease .4s;
-    z-index:4;
+  /* ===== 控制栏 ===== */
+  .controls{
+    position:relative; z-index:3; margin-top:34px;
+    display:flex; align-items:center; gap:18px;
   }
-  .book.open .back-btn{ opacity:1; }
+  .ctrl-btn{
+    font-family:"Ma Shan Zheng",cursive; font-size:19px; color:var(--ink-deep);
+    background:var(--cream); border:2px dashed rgba(143,194,154,.65); border-radius:30px;
+    padding:8px 22px; cursor:pointer; transition:transform .2s ease, background .2s ease;
+    box-shadow:0 6px 16px -8px rgba(91,70,50,.4);
+  }
+  .ctrl-btn:hover{ transform:translateY(-2px); background:var(--green); }
+  .ctrl-btn:disabled{ opacity:.35; cursor:not-allowed; transform:none; }
+  .ctrl-btn:disabled:hover{ background:var(--cream); }
+  .dots{ display:flex; gap:7px; }
+  .dots .d{ width:9px; height:9px; border-radius:50%; background:rgba(122,92,67,.25); transition:all .3s ease; }
+  .dots .d.on{ background:var(--pink-deep); transform:scale(1.35); }
+  .pct{ font-family:"Long Cang",cursive; font-size:17px; color:var(--ink); opacity:.85; min-width:66px; text-align:center; }
 
-  /* 页面下方提示 */
-  .hint{
-    position:relative;
-    z-index:3;
-    margin-top:40px;
-    text-align:center;
-    font-family:"Long Cang", cursive;
-    font-size:18px;
-    color:var(--ink);
-    letter-spacing:2px;
-    opacity:.8;
-  }
-  .hint .arrow{ display:inline-block; animation: nudge 1.6s ease-in-out infinite; color:var(--pink-deep); }
-  @keyframes nudge{
-    0%,100%{ transform: translateX(0); }
-    50%{ transform: translateX(6px); }
-  }
+  .hint{ position:relative; z-index:3; margin-top:12px; font-family:"Long Cang",cursive; font-size:16px; color:var(--ink); opacity:.7; letter-spacing:2px; }
 
   @media (max-width:480px){
-    .book{ height:min(560px, 70vh); }
-    .toc-inner{ padding:40px 28px 34px 42px; }
-    .toc-list li{ font-size:17px; gap:10px; }
-    .cover-cat{ width:140px; }
-    .cover-title-wrap{ margin-top:70px; }
+    .book{ height:min(600px, 74vh); }
+    .scroll{ padding:48px 22px 56px 38px; }
+    .controls{ gap:12px; }
+    .ctrl-btn{ padding:7px 16px; font-size:17px; }
   }
 </style>
 </head>
 <body>
 
-  <!-- 背景手绘点缀 -->
-  <svg class="bg-doodle" style="top:10%; left:6%;" viewBox="0 0 24 24" fill="none">
-    <path d="M12 20c-4.5 0-7-2.6-7-5.2C5 12.3 7 10.5 9.2 10.5c1.4 0 2.4.7 2.8 1.7.4-1 1.4-1.7 2.8-1.7C17 10.5 19 12.3 19 14.8c0 2.6-2.5 5.2-7 5.2z" stroke="#F2A6A0" stroke-width="1.4" stroke-linejoin="round"/>
-  </svg>
-  <svg class="bg-doodle" style="top:20%; right:8%;" viewBox="0 0 24 24" fill="none">
-    <path d="M12 3v18M3 12h18M12 3c1.5 1.5 1.5 3 0 4.5S10.5 9 12 10.5 13.5 13.5 12 15 10.5 18 12 19.5 13.5 22.5 12 24" stroke="#8FC29A" stroke-width="1.5" stroke-linecap="round"/>
-  </svg>
-  <svg class="bg-doodle" style="bottom:16%; left:10%;" viewBox="0 0 24 24" fill="none">
-    <path d="M5 12l3.5 3.5L19 6" stroke="#F2A6A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-  <svg class="bg-doodle" style="bottom:22%; right:12%;" viewBox="0 0 24 24" fill="none">
-    <path d="M12 4l1.8 4.6L18 10.4l-4.2 1.8L12 16.8l-1.8-4.6L6 10.4l4.2-1.8z" stroke="#E8A87C" stroke-width="1.5" stroke-linejoin="round"/>
-  </svg>
+<!-- 猫咪 SVG 符号（复用） -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="cat" viewBox="0 0 220 200">
+      <path d="M172 158 Q 200 128 178 104 Q 196 122 168 148" stroke="#E8A87C" stroke-width="14" stroke-linecap="round" fill="none"/>
+      <path d="M168 148 Q 186 126 172 108" stroke="#5A4A42" stroke-width="9" stroke-linecap="round" fill="none"/>
+      <ellipse cx="108" cy="162" rx="58" ry="42" fill="#FFFDF7"/>
+      <path d="M60 150 Q 78 128 104 132 Q 96 150 92 172 Q 74 186 60 176 Z" fill="#E8A87C"/>
+      <path d="M150 152 Q 160 174 150 194 Q 128 200 118 188 Q 136 184 146 168 Z" fill="#5A4A42"/>
+      <ellipse cx="88" cy="196" rx="14" ry="8" fill="#FFFDF7" stroke="#E8A87C" stroke-width="1.4"/>
+      <ellipse cx="126" cy="196" rx="14" ry="8" fill="#FFFDF7" stroke="#5A4A42" stroke-width="1.4"/>
+      <circle cx="108" cy="98" r="50" fill="#FFFDF7"/>
+      <polygon points="64,66 76,24 106,54" fill="#E8A87C"/>
+      <polygon points="152,66 140,24 110,54" fill="#5A4A42"/>
+      <polygon points="74,58 80,34 94,54" fill="#F2A6A0"/>
+      <polygon points="142,58 136,34 122,54" fill="#F2A6A0"/>
+      <path d="M58 90 Q 70 70 90 76 Q 84 92 72 100 Q 60 102 58 90 Z" fill="#E8A87C"/>
+      <path d="M150 84 Q 156 72 148 62 Q 138 66 138 78 Z" fill="#5A4A42"/>
+      <circle cx="88" cy="98" r="5.5" fill="#5A4A42"/><circle cx="128" cy="98" r="5.5" fill="#5A4A42"/>
+      <circle cx="90" cy="96" r="2" fill="#fff"/><circle cx="130" cy="96" r="2" fill="#fff"/>
+      <path d="M108 112 l-3.5 3.5 7 0 z" fill="#F2A6A0"/>
+      <path d="M108 115.5 c -4 3 -2 7 0 7 c 2 0 4 -4 0 -7" stroke="#5A4A42" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+      <g stroke="#5A4A42" stroke-width="1.4" stroke-linecap="round" opacity=".6">
+        <path d="M78 110 L 58 106"/><path d="M78 116 L 56 116"/><path d="M80 122 L 60 126"/>
+        <path d="M138 110 L 158 106"/><path d="M138 116 L 160 116"/><path d="M136 122 L 156 126"/>
+      </g>
+      <circle cx="80" cy="112" r="7" fill="#FADBD8" opacity=".7"/><circle cx="136" cy="112" r="7" fill="#FADBD8" opacity=".7"/>
+    </symbol>
+  </defs>
+</svg>
 
-  <div class="scene">
-    <div class="book" id="book">
-      <div class="book-shadow"></div>
+<div class="scene">
+  <div class="book" id="book">
+    <div class="book-shadow"></div>
 
-      <!-- 目录页 -->
-      <div class="page toc">
-        <div class="toc-inner">
-          <div class="toc-head">
-            <div class="kicker">CONTENTS</div>
+    <!-- 0 封面 -->
+    <section class="sheet cover-bg">
+      <div class="cover-inner">
+        <div class="frame"></div>
+        <div class="tape g tl"></div>
+        <div class="tape p tr"></div>
+        <span class="doodle" style="top:14%;left:13%">✿</span>
+        <span class="doodle g" style="top:10%;right:15%">❀</span>
+        <span class="doodle" style="top:44%;left:8%">♥</span>
+        <span class="doodle g" style="top:52%;right:9%">✧</span>
+        <div class="cover-title-wrap">
+          <div class="pre">· 给她的温柔照护 ·</div>
+          <h1>小月子<br>维护<span class="hl">手册</span></h1>
+          <div class="cover-sub"><span class="leaf">✿</span> 陪伴 · 照护 · 康复 <span class="leaf">✿</span></div>
+        </div>
+        <svg class="cover-cat" viewBox="0 0 220 200"><use href="#cat"/></svg>
+        <div class="cover-foot"><div class="slogan">把<span>温柔</span>写进<span>每一天</span></div></div>
+      </div>
+      <div class="fold" id="coverFold" title="翻开"><div class="curl"></div><span class="txt">翻开 ▶</span></div>
+    </section>
+
+    <!-- 1 目录 -->
+    <section class="sheet">
+      <div class="paper"></div>
+      <div class="frame"></div>
+      <div class="page">
+        <div class="scroll">
+          <div class="chap-head">
+            <div class="chap-num pink" style="font-size:20px">目</div>
             <h2>目 录</h2>
+            <div class="sub">CONTENTS</div>
+            <div class="rule"></div>
           </div>
           <ul class="toc-list">
-            <li>
-              <span class="num">一</span>
-              <span class="t">心理陪伴<small>做她的定心丸 · 情绪观察与边界</small></span>
-              <span class="dots"></span>
-              <span class="pg">01</span>
-            </li>
-            <li>
-              <span class="num">二</span>
-              <span class="t">饮食调理<small>补血暖胃 · 食材选择与禁忌</small></span>
-              <span class="dots"></span>
-              <span class="pg">07</span>
-            </li>
-            <li>
-              <span class="num">三</span>
-              <span class="t">身体恢复<small>照护要点 · 出血观察与风险信号</small></span>
-              <span class="dots"></span>
-              <span class="pg">13</span>
-            </li>
-            <li>
-              <span class="num">四</span>
-              <span class="t">一周菜单<small>早中晚选项池 · 自由搭配</small></span>
-              <span class="dots"></span>
-              <span class="pg">19</span>
-            </li>
-            <li>
-              <span class="num">五</span>
-              <span class="t">采购清单<small>照着买 · 一次备齐一周</small></span>
-              <span class="dots"></span>
-              <span class="pg">27</span>
-            </li>
-            <li>
-              <span class="num">六</span>
-              <span class="t">复查与禁忌<small>满月前须知 · 复查别漏</small></span>
-              <span class="dots"></span>
-              <span class="pg">31</span>
-            </li>
+            <li><span class="num">一</span><span class="t">心理陪伴<small>做她的定心丸 · 情绪观察与边界</small></span><span class="dots"></span><span class="pg">03</span></li>
+            <li><span class="num">二</span><span class="t">饮食调理<small>先清淡再进补 · 食材与忌口</small></span><span class="dots"></span><span class="pg">07</span></li>
+            <li><span class="num">三</span><span class="t">身体恢复<small>照护要点 · 出血观察与风险信号</small></span><span class="dots"></span><span class="pg">11</span></li>
+            <li><span class="num">四</span><span class="t">一周菜单<small>早中晚选项池 · 自由搭配</small></span><span class="dots"></span><span class="pg">15</span></li>
+            <li><span class="num">五</span><span class="t">采购清单<small>照着买 · 一次备齐一周</small></span><span class="dots"></span><span class="pg">21</span></li>
+            <li><span class="num">六</span><span class="t">复查与禁忌<small>满月前须知 · 复查别漏</small></span><span class="dots"></span><span class="pg">24</span></li>
           </ul>
         </div>
-        <svg class="toc-cat" viewBox="0 0 120 110" fill="none">
-          <path d="M60 100c-20 0-33-12-33-24 0-9 8-15 17-15 5 0 10 2 13 6 2-4 6-6 11-6 9 0 17 6 17 15 0 12-13 24-25 24z" fill="#FADBD8"/>
-          <circle cx="42" cy="78" r="2" fill="#5A4A42"/>
-          <circle cx="70" cy="78" r="2" fill="#5A4A42"/>
-          <path d="M53 83c1.5 1 3 1 4 0" stroke="#5A4A42" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <span class="pagenum">02</span>
       </div>
+    </section>
 
-      <!-- 封面 -->
-      <div class="page cover">
-        <div class="cover-inner">
-          <div class="cover-frame"></div>
-          <div class="tape t1"></div>
-          <div class="tape t2"></div>
-
-          <div class="cover-doodles">
-            <span class="doodle" style="top:14%; left:14%;">✿</span>
-            <span class="doodle g" style="top:10%; right:16%;">❀</span>
-            <span class="doodle" style="top:44%; left:9%;">♥</span>
-            <span class="doodle g" style="top:52%; right:10%;">✧</span>
-            <span class="doodle" style="bottom:26%; left:16%;">✿</span>
-            <span class="doodle" style="bottom:30%; right:15%;">♥</span>
+    <!-- 2 心理陪伴 -->
+    <section class="sheet">
+      <div class="paper"></div>
+      <div class="frame"></div>
+      <span class="doodle" style="top:8%;right:6%">♥</span>
+      <div class="page">
+        <div class="scroll">
+          <div class="chap-head">
+            <div class="chap-num">一</div>
+            <h2>心理陪伴</h2>
+            <div class="sub">做她的定心丸 · 先接住情绪，再讲道理</div>
+            <div class="rule"></div>
           </div>
 
-          <div class="cover-title-wrap">
-            <div class="pre">· 给她的温柔照护 ·</div>
-            <h1>小月子<br>维护<span class="hl">手册</span></h1>
-            <div class="cover-sub">
-              <span class="leaf">✿</span> 陪伴 · 照护 · 康复 <span class="leaf">✿</span>
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>可以说的话</div>
+            <div class="card">
+              <ul class="list">
+                <li>「你现在难受很正常，我陪你。」</li>
+                <li>「不想说就不说，我在就行。」</li>
+                <li>「今天累不累？想不想吃点东西？」</li>
+                <li>「我帮你把饭热好了，趁热吃。」</li>
+              </ul>
             </div>
           </div>
 
-          <!-- 三花玳瑁猫 -->
-          <svg class="cover-cat" viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- 尾巴 -->
-            <path d="M172 158 Q 200 128 178 104 Q 196 122 168 148" stroke="#E8A87C" stroke-width="14" stroke-linecap="round" fill="none"/>
-            <path d="M168 148 Q 186 126 172 108" stroke="#5A4A42" stroke-width="9" stroke-linecap="round" fill="none"/>
-            <!-- 身体 -->
-            <ellipse cx="108" cy="162" rx="58" ry="42" fill="#FFFDF7"/>
-            <path d="M60 150 Q 78 128 104 132 Q 96 150 92 172 Q 74 186 60 176 Z" fill="#E8A87C"/>
-            <path d="M150 152 Q 160 174 150 194 Q 128 200 118 188 Q 136 184 146 168 Z" fill="#5A4A42"/>
-            <!-- 前爪 -->
-            <ellipse cx="88" cy="196" rx="14" ry="8" fill="#FFFDF7" stroke="#E8A87C" stroke-width="1.4"/>
-            <ellipse cx="126" cy="196" rx="14" ry="8" fill="#FFFDF7" stroke="#5A4A42" stroke-width="1.4"/>
-            <!-- 头 -->
-            <circle cx="108" cy="98" r="50" fill="#FFFDF7"/>
-            <!-- 耳 -->
-            <polygon points="64,66 76,24 106,54" fill="#E8A87C"/>
-            <polygon points="152,66 140,24 110,54" fill="#5A4A42"/>
-            <polygon points="74,58 80,34 94,54" fill="#F2A6A0"/>
-            <polygon points="142,58 136,34 122,54" fill="#F2A6A0"/>
-            <!-- 头部的花斑 -->
-            <path d="M58 90 Q 70 70 90 76 Q 84 92 72 100 Q 60 102 58 90 Z" fill="#E8A87C"/>
-            <path d="M150 84 Q 156 72 148 62 Q 138 66 138 78 Z" fill="#5A4A42"/>
-            <!-- 眼睛 -->
-            <circle cx="88" cy="98" r="5.5" fill="#5A4A42"/>
-            <circle cx="128" cy="98" r="5.5" fill="#5A4A42"/>
-            <circle cx="90" cy="96" r="2" fill="#fff"/>
-            <circle cx="130" cy="96" r="2" fill="#fff"/>
-            <!-- 鼻子和嘴 -->
-            <path d="M108 112 l-3.5 3.5 7 0 z" fill="#F2A6A0"/>
-            <path d="M108 115.5 c -4 3 -2 7 0 7 c 2 0 4 -4 0 -7 M108 115.5 c 0 0 0 0 0 0" stroke="#5A4A42" stroke-width="1.6" stroke-linecap="round" fill="none"/>
-            <!-- 胡须 -->
-            <g stroke="#5A4A42" stroke-width="1.4" stroke-linecap="round" opacity=".6">
-              <path d="M78 110 L 58 106"/><path d="M78 116 L 56 116"/><path d="M80 122 L 60 126"/>
-              <path d="M138 110 L 158 106"/><path d="M138 116 L 160 116"/><path d="M136 122 L 156 126"/>
-            </g>
-            <!-- 腮红 -->
-            <circle cx="80" cy="112" r="7" fill="#FADBD8" opacity=".7"/>
-            <circle cx="136" cy="112" r="7" fill="#FADBD8" opacity=".7"/>
-          </svg>
+          <div class="sec">
+            <div class="sec-title pink"><span class="dot"></span>避免说的话</div>
+            <div class="card pink">
+              <ul class="list pink">
+                <li>✗ 「别想太多」「都过去了」</li>
+                <li>✗ 「早知如此何必当初」</li>
+                <li>✗ 「怎么这么不小心」</li>
+                <li>✗ 「没事，以后再怀就是了」</li>
+              </ul>
+            </div>
+          </div>
 
-          <div class="cover-foot">
-            <div class="slogan">把<span>温柔</span>写进<span>每一天</span></div>
+          <div class="sec">
+            <div class="sec-title orange"><span class="dot"></span>情绪观察</div>
+            <div class="card">
+              <p style="font-size:14px;line-height:1.6;margin-bottom:6px"><b>正常</b>（术后 1–2 周，激素回落）：易哭、烦躁、没精神、失眠——别急着让她"振作"。</p>
+              <p style="font-size:14px;line-height:1.6"><b>要警惕</b>（该就医）：低落持续超 2 周、严重失眠吃不下、有自伤念头、幻觉或异常麻木。</p>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>陪她做点"轻量正常"的事</div>
+            <div class="card">
+              <span class="pill good">看剧·综艺</span><span class="pill good">听音乐</span><span class="pill good">拼图</span><span class="pill good">浇花</span><span class="pill good">下棋</span>
+              <p style="font-size:13px;opacity:.75;margin-top:6px">帮她从"这件事"里暂时抽离，别安排消耗精力的大活动。</p>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title pink"><span class="dot"></span>帮她挡外界的干扰</div>
+            <div class="note">长辈、男友爱追问或评判时，你帮她挡一句：<b>「她现在需要休息，这些先别问了。」</b>很多压力来自周围人的反应，你挡下就是帮了大忙。</div>
           </div>
         </div>
-
-        <!-- 右下角翻页 -->
-        <div class="flip-corner" id="flipCorner" title="翻开">
-          <div class="curl"></div>
-          <span class="hint-txt">翻开 ▶</span>
-        </div>
+        <span class="pagenum">03</span>
       </div>
+    </section>
 
-      <!-- 回封面按钮（翻开后出现） -->
-      <div class="back-btn" id="backBtn">↩ 回到封面</div>
-    </div>
+    <!-- 3 饮食调理 -->
+    <section class="sheet">
+      <div class="paper"></div>
+      <div class="frame pink"></div>
+      <span class="doodle g" style="top:8%;left:6%">❀</span>
+      <div class="page">
+        <div class="scroll">
+          <div class="chap-head">
+            <div class="chap-num pink">二</div>
+            <h2>饮食调理</h2>
+            <div class="sub">先清淡易消化 · 再补血补蛋白 · 忌寒凉辛辣</div>
+            <div class="rule"></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>术后 1–3 天 · 清淡温和</div>
+            <div class="card">
+              <span class="pill good">小米山药粥</span><span class="pill good">红枣小米粥</span><span class="pill good">南瓜粥</span><span class="pill good">鸡蛋羹</span><span class="pill good">软烂面条</span><span class="pill good">鲫鱼汤·鸡汤（去浮油）</span>
+              <p style="font-size:13px;opacity:.75;margin-top:6px">做法要点：少油少盐、温热软烂，一次熬一锅分装，想吃随时热。</p>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title pink"><span class="dot"></span>术后 4 天起 · 补血 + 补蛋白</div>
+            <div class="card">
+              <table class="tbl pink">
+                <tr><th style="width:86px">目的</th><th>食材</th></tr>
+                <tr><td><b>补铁补血</b></td><td>猪肝 · 鸭血 · 瘦肉 · 牛肉 · 菠菜 · 黑木耳 · 红枣 · 桂圆</td></tr>
+                <tr><td><b>优质蛋白</b></td><td>鸡蛋 · 牛奶 · 鱼虾 · 豆腐 · 豆浆</td></tr>
+                <tr><td><b>温和进补</b></td><td>鸡汤 · 排骨汤 · 山药 · 莲子 · 枸杞</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title orange"><span class="dot"></span>忌口清单（帮她收走）</div>
+            <div class="card">
+              <ul class="list pink">
+                <li><b>生冷</b>：冷饮、冰淇淋、凉拌菜、西瓜、梨、香蕉</li>
+                <li><b>辛辣刺激</b>：辣椒、火锅、酒、浓茶、咖啡</li>
+                <li><b>油腻大补</b>：人参、鹿茸、阿胶（术后初期先别碰）</li>
+                <li><b>活血</b>：当归、田七、藏红花（可能增加出血）</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>小贴士</div>
+            <div class="note">水果用<b>温水泡或蒸熟</b>再吃；全程喝<b>温水</b>；红糖姜枣茶每天一小杯即可，<b>别过量</b>。</div>
+          </div>
+        </div>
+        <span class="pagenum">07</span>
+      </div>
+    </section>
+
+    <!-- 4 身体恢复 -->
+    <section class="sheet">
+      <div class="paper"></div>
+      <div class="frame"></div>
+      <span class="doodle" style="top:8%;right:7%">✿</span>
+      <div class="page">
+        <div class="scroll">
+          <div class="chap-head">
+            <div class="chap-num">三</div>
+            <h2>身体恢复</h2>
+            <div class="sub">照护要点 · 出血观察 · 风险信号</div>
+            <div class="rule"></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>休息与活动</div>
+            <div class="card">
+              <ul class="list">
+                <li>前 2 周以休息为主，避免<b>提重物 / 久站 / 爬楼 / 剧烈运动</b>。</li>
+                <li>可下床<b>慢慢走动</b>，帮助宫腔积血排出。</li>
+                <li><b>保暖</b>：腹部、腰背、脚别受凉，不碰冷水。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title pink"><span class="dot"></span>会阴护理</div>
+            <div class="card">
+              <ul class="list pink">
+                <li>每天温水<b>洗外阴</b>，从前向后擦。</li>
+                <li><b>只洗外面、不冲阴道内部</b>。</li>
+                <li>勤换卫生巾（2–4 小时）和内裤，保持干爽。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title orange"><span class="dot"></span>出血观察（帮她记）</div>
+            <div class="card">
+              <p style="font-size:14px;line-height:1.6"><b>正常</b>：类似月经量或更少，3–7 天逐渐减少，颜色鲜红 → 暗红 → 咖啡色。</p>
+              <p style="font-size:13px;opacity:.75;margin-top:4px">7–8 周人流，很多人出血量不大，只有少量血丝也正常。</p>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>严格禁忌（整个月盯住）</div>
+            <div class="card">
+              <span class="pill warn">🚫 1 个月禁同房</span><span class="pill warn">🚫 禁盆浴·泡澡·游泳·坐浴</span><span class="pill warn">🚫 只可淋浴</span><span class="pill warn">🚫 避免剧烈运动</span>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title pink"><span class="dot"></span>⚠️ 立刻就医的信号</div>
+            <div class="card pink">
+              <ul class="list pink">
+                <li>出血<b>突然增多、超过月经量</b>，或持续超 10–14 天不净</li>
+                <li>分泌物<b>有臭味</b>、<b>发热</b>（≥ 38℃）</li>
+                <li>腹痛<b>剧烈或持续加重</b></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <span class="pagenum">11</span>
+      </div>
+    </section>
+
+    <!-- 5 一周菜单 -->
+    <section class="sheet">
+      <div class="paper"></div>
+      <div class="frame pink"></div>
+      <span class="doodle g" style="top:8%;left:7%">✧</span>
+      <div class="page">
+        <div class="scroll">
+          <div class="chap-head">
+            <div class="chap-num pink">四</div>
+            <h2>一周菜单</h2>
+            <div class="sub">早中晚选项池 · 自由搭配，当天想吃哪个做哪个</div>
+            <div class="rule"></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>早餐 · 挑 1 个（配温牛奶/豆浆）</div>
+            <div class="card"><span class="pill good">A1 小米山药粥</span><span class="pill good">A2 红枣桂圆小米粥</span><span class="pill good">A3 南瓜燕麦粥</span><span class="pill good">A4 红豆红枣粥</span><span class="pill good">A5 鸡蛋羹+蒸苹果</span><span class="pill good">A6 燕麦牛奶+水煮蛋</span></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title pink"><span class="dot"></span>午餐 · 挑 1 荤 + 1 素/汤</div>
+            <div class="card"><span class="pill good">B1 清蒸鲈鱼</span><span class="pill good">B2 番茄炒蛋</span><span class="pill good">B3 香菇滑鸡</span><span class="pill good">B4 牛肉炖山药</span><span class="pill good">B5 山药排骨汤</span><span class="pill good">B6 猪肝菠菜汤</span><span class="pill good">B7 虾仁蒸蛋</span></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title orange"><span class="dot"></span>晚餐 · 挑 1 个（偏清淡）</div>
+            <div class="card"><span class="pill good">C1 鲫鱼豆腐汤</span><span class="pill good">C2 鸡丝小米粥</span><span class="pill good">C3 青菜瘦肉面</span><span class="pill good">C4 莲藕排骨汤</span><span class="pill good">C5 西兰花炒木耳+蒸蛋</span><span class="pill good">C6 番茄龙须面</span></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>加餐 · 挑 1 个</div>
+            <div class="card"><span class="pill good">D1 红糖姜枣茶</span><span class="pill good">D2 蒸苹果</span><span class="pill good">D3 桂圆枸杞茶</span><span class="pill good">D4 温牛奶</span><span class="pill good">D5 炖蛋羹</span></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title pink"><span class="dot"></span>7 天参考搭配表</div>
+            <div class="card">
+              <table class="tbl">
+                <tr><th>天</th><th>早餐</th><th>午餐</th><th>晚餐</th><th>加餐</th></tr>
+                <tr><td><b>周五</b></td><td>小米山药粥</td><td>鸡蛋羹+软饭</td><td>番茄龙须面</td><td>温牛奶</td></tr>
+                <tr><td><b>周六</b></td><td>红枣桂圆粥</td><td>番茄炒蛋</td><td>鸡丝小米粥</td><td>红糖姜枣茶</td></tr>
+                <tr><td><b>周日</b></td><td>南瓜燕麦粥</td><td>猪肝菠菜汤</td><td>青菜瘦肉面</td><td>蒸苹果</td></tr>
+                <tr><td><b>周一</b></td><td>红豆红枣粥</td><td>香菇滑鸡</td><td>西兰花炒木耳+蒸蛋</td><td>桂圆枸杞茶</td></tr>
+                <tr><td><b>周二</b></td><td>燕麦牛奶+蛋</td><td>牛肉炖山药</td><td>鲫鱼豆腐汤</td><td>温牛奶</td></tr>
+                <tr><td><b>周三</b></td><td>小米山药粥</td><td>清蒸鲈鱼</td><td>莲藕排骨汤</td><td>蒸苹果</td></tr>
+                <tr><td><b>周四</b></td><td>鸡蛋羹+蒸苹果</td><td>山药排骨汤</td><td>虾仁蒸蛋+粥</td><td>红糖姜枣茶</td></tr>
+              </table>
+              <p style="font-size:12px;opacity:.7;margin-top:6px">第 8 天起可逐步恢复日常饮食，但仍忌生冷辛辣、不同房不盆浴。</p>
+            </div>
+          </div>
+        </div>
+        <span class="pagenum">15</span>
+      </div>
+    </section>
+
+    <!-- 6 采购清单 -->
+    <section class="sheet">
+      <div class="paper"></div>
+      <div class="frame"></div>
+      <span class="doodle" style="top:8%;right:6%">✿</span>
+      <div class="page">
+        <div class="scroll">
+          <div class="chap-head">
+            <div class="chap-num">五</div>
+            <h2>采购清单</h2>
+            <div class="sub">照着买 · 一次备齐一周</div>
+            <div class="rule"></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>分类明细</div>
+            <div class="card">
+              <table class="tbl">
+                <tr><th style="width:86px">类别</th><th>买什么</th></tr>
+                <tr><td><b>主食杂粮</b></td><td>小米 · 大米 · 燕麦片 · 山药 · 南瓜 · 红豆 · 莲子 · 百合 · 红枣 · 桂圆 · 黑芝麻 · 细面条</td></tr>
+                <tr><td><b>蛋奶</b></td><td>鸡蛋 · 纯牛奶 · 无糖豆浆</td></tr>
+                <tr><td><b>肉鱼</b></td><td>猪里脊 · 猪肝 · 牛肉 · 鸡腿 · 鲫鱼 · 鲈鱼/鳕鱼 · 排骨 · 虾仁</td></tr>
+                <tr><td><b>蔬菜菌菇</b></td><td>菠菜 · 番茄 · 小油菜 · 西兰花 · 香菇 · 胡萝卜 · 黑木耳 · 豆腐 · 玉米 · 莲藕</td></tr>
+                <tr><td><b>补血调味</b></td><td>红糖 · 枸杞 · 生姜 · 大葱 · 盐 · 生抽 · 香油 · 料酒 · 白胡椒</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title pink"><span class="dot"></span>采购小贴士</div>
+            <div class="note"><b>现吃现买</b>：猪肝、鱼、绿叶菜（买 2 天内量）。<br><b>一次备齐</b>：干货（红枣桂圆黑木耳红豆）和冷冻肉类。</div>
+          </div>
+        </div>
+        <span class="pagenum">21</span>
+      </div>
+    </section>
+
+    <!-- 7 复查与禁忌 -->
+    <section class="sheet">
+      <div class="paper"></div>
+      <div class="frame pink"></div>
+      <span class="doodle g" style="top:8%;left:6%">❀</span>
+      <div class="page">
+        <div class="scroll">
+          <div class="chap-head">
+            <div class="chap-num pink">六</div>
+            <h2>复查与禁忌</h2>
+            <div class="sub">满月前须知 · 复查别漏</div>
+            <div class="rule"></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>复查</div>
+            <div class="card">
+              <p style="font-size:15px;line-height:1.6">术后 <b>2 周左右复查 B 超</b>，看宫腔恢复、是否流干净。<b>一定别漏</b>，提前一天提醒她，尽量陪她去。</p>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title pink"><span class="dot"></span>满月前禁忌</div>
+            <div class="card">
+              <span class="pill warn">不同房</span><span class="pill warn">不盆浴·泡澡·游泳</span><span class="pill warn">不碰冷水</span><span class="pill warn">忌生冷辛辣</span><span class="pill warn">避免剧烈运动</span>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title orange"><span class="dot"></span>⚠️ 就医信号</div>
+            <div class="card">
+              <ul class="list pink">
+                <li>出血超月经量，或超 10–14 天不净</li>
+                <li>分泌物有臭味、发热（≥ 38℃）</li>
+                <li>腹痛剧烈或持续加重</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-title"><span class="dot"></span>避孕提醒</div>
+            <div class="note">术后 <b>1 个月内做好避孕</b>——月经来之前就可能恢复排卵，短期内再怀孕对身体的伤害很大。复查时可以顺便问医生适合的避孕方式。</div>
+          </div>
+        </div>
+        <span class="pagenum">24</span>
+      </div>
+    </section>
+
+    <!-- 8 封底 -->
+    <section class="sheet cover-bg">
+      <div class="back-inner">
+        <span class="doodle" style="top:12%;left:14%">✿</span>
+        <span class="doodle g" style="top:14%;right:15%">❀</span>
+        <span class="doodle" style="bottom:16%;left:16%">♥</span>
+        <span class="doodle g" style="bottom:18%;right:14%">✧</span>
+        <div class="big">把<span class="hl">温柔</span><br>写进每一天</div>
+        <div class="line">你情绪稳定，就是她最好的定心丸</div>
+        <div class="line" style="opacity:.7">专业的事，交给专业的人</div>
+        <div class="line" style="font-size:16px">— 陪伴 · 照护 · 康复 —</div>
+        <svg class="back-cat" viewBox="0 0 220 200"><use href="#cat"/></svg>
+      </div>
+    </section>
+
   </div>
+</div>
 
-  <div class="hint">轻点书页右下角 <span class="arrow">▶</span> 翻开这本小手册</div>
+<!-- 控制栏 -->
+<div class="controls">
+  <button class="ctrl-btn" id="prevBtn">‹ 上一页</button>
+  <div class="dots" id="dots"></div>
+  <span class="pct" id="pct">1 / 9</span>
+  <button class="ctrl-btn" id="nextBtn">下一页 ›</button>
+</div>
+<div class="hint">点击封面右下角翻开 · 也可用 ← → 方向键翻页 · 手机上左右滑动</div>
 
 <script>
   const book = document.getElementById('book');
-  const flipCorner = document.getElementById('flipCorner');
-  const backBtn = document.getElementById('backBtn');
+  const sheets = [...book.querySelectorAll('.sheet')];
+  const total = sheets.length;
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const pct = document.getElementById('pct');
+  const dots = document.getElementById('dots');
+  const coverFold = document.getElementById('coverFold');
 
-  function openBook(){
-    book.classList.add('open');
+  let current = 0;
+  let busy = false;
+  const DURATION = 1050;
+
+  // 构建页码圆点
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('span');
+    d.className = 'd';
+    d.addEventListener('click', () => goTo(i));
+    dots.appendChild(d);
   }
-  function closeBook(){
-    book.classList.remove('open');
+
+  function applyStates() {
+    sheets.forEach((s, i) => {
+      s.classList.remove('front', 'turned', 'pending');
+      if (i < current) {
+        s.classList.add('turned');
+        s.style.zIndex = i + 1;
+      } else if (i === current) {
+        s.classList.add('front');
+        s.style.zIndex = 100;
+      } else {
+        s.classList.add('pending');
+        s.style.zIndex = 20 + (total - i);
+      }
+    });
   }
 
-  flipCorner.addEventListener('click', openBook);
-  backBtn.addEventListener('click', closeBook);
+  function updateUI() {
+    pct.textContent = (current + 1) + ' / ' + total;
+    [...dots.children].forEach((d, i) => d.classList.toggle('on', i === current));
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+  }
 
-  // 键盘翻页
-  document.addEventListener('keydown', (e)=>{
-    if(e.code === 'Space' || e.code === 'ArrowRight' || e.code === 'Enter'){
-      e.preventDefault();
-      book.classList.contains('open') ? closeBook() : openBook();
-    }
-    if(e.code === 'ArrowLeft' || e.code === 'Escape'){
-      closeBook();
+  function next() {
+    if (busy || current >= total - 1) return;
+    busy = true;
+    const cur = sheets[current];
+    const nxt = sheets[current + 1];
+    cur.style.zIndex = 500;
+    nxt.style.zIndex = 400;
+    cur.classList.remove('front');
+    cur.classList.add('turned');
+    setTimeout(() => {
+      current++;
+      applyStates();
+      busy = false;
+      updateUI();
+    }, DURATION - 40);
+  }
+
+  function prev() {
+    if (busy || current <= 0) return;
+    busy = true;
+    const cur = sheets[current];
+    const prv = sheets[current - 1];
+    prv.style.zIndex = 500;
+    cur.style.zIndex = 400;
+    prv.classList.remove('turned', 'pending');
+    prv.classList.add('front');
+    setTimeout(() => {
+      current--;
+      applyStates();
+      busy = false;
+      updateUI();
+    }, DURATION - 40);
+  }
+
+  function goTo(n) {
+    if (busy) return;
+    n = Math.max(0, Math.min(total - 1, n));
+    if (n === current) return;
+    book.classList.add('no-anim');
+    current = n;
+    applyStates();
+    updateUI();
+    void book.offsetWidth; // 强制回流，确保 no-anim 生效后立即恢复
+    book.classList.remove('no-anim');
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+  if (coverFold) coverFold.addEventListener('click', (e) => { e.stopPropagation(); next(); });
+
+  // 键盘
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'ArrowRight' || e.code === 'Space' || e.code === 'Enter') {
+      e.preventDefault(); next();
+    } else if (e.code === 'ArrowLeft' || e.code === 'Escape') {
+      e.preventDefault(); prev();
     }
   });
+
+  // 触摸滑动
+  let tx = 0, ty = 0;
+  book.addEventListener('touchstart', (e) => {
+    const t = e.touches[0]; tx = t.clientX; ty = t.clientY;
+  }, { passive: true });
+  book.addEventListener('touchend', (e) => {
+    const t = e.changedTouches[0];
+    const dx = t.clientX - tx, dy = t.clientY - ty;
+    if (Math.abs(dx) > 46 && Math.abs(dy) < 40) {
+      dx < 0 ? next() : prev();
+    }
+  }, { passive: true });
+
+  applyStates();
+  updateUI();
 </script>
 </body>
 </html>
