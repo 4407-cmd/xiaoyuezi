@@ -204,14 +204,15 @@
   .cover-title-wrap h1 .hl{ color:var(--pink-deep); }
   .cover-sub{ margin-top:12px; display:inline-flex; align-items:center; gap:8px; font-size:16px; opacity:.85; }
   .cover-sub .leaf{ color:var(--green-deep); }
-  .cover-cat{ position:relative; z-index:2; margin-top:10px; animation:floaty 4.5s ease-in-out infinite; }
+  .cover-cat{ --cat-h:320px; position:relative; z-index:2; margin-top:10px; animation:floaty 4.5s ease-in-out infinite; }
   .cover-cat img{
-    height:320px; width:auto; display:block;
+    height:var(--cat-h); width:auto; display:block;
     filter:drop-shadow(0 16px 26px rgba(91,70,50,.22));
     transform:rotate(-2deg);
   }
   .sticker{
     position:absolute; z-index:3; pointer-events:none;
+    height:calc(var(--cat-h)/9); width:auto;
     filter:drop-shadow(0 2px 3px rgba(91,70,50,.18));
     animation:stickerFloat 3.6s ease-in-out infinite;
   }
@@ -286,7 +287,7 @@
     .controls{ gap:12px; }
     .ctrl-btn{ padding:7px 16px; font-size:17px; }
     .cover-title-wrap{ margin-top:56px; }
-    .cover-cat img{ height:210px; }
+    .cover-cat{ --cat-h:210px; }
   }
 </style>
 </head>
@@ -364,12 +365,12 @@
         </div>
         <div class="cover-cat">
           <img src="images/cat.png" alt="三花猫">
-          <img class="sticker" src="images/stickers/sticker_06.png" alt="" style="left:-44px; top:26px; width:40px; animation-duration:3.4s; animation-delay:0s;">
-          <img class="sticker" src="images/stickers/sticker_18.png" alt="" style="right:-46px; top:66px; width:34px; animation-duration:4s; animation-delay:.6s;">
-          <img class="sticker" src="images/stickers/sticker_23.png" alt="" style="left:-56px; top:150px; width:42px; animation-duration:3.8s; animation-delay:1.2s;">
-          <img class="sticker" src="images/stickers/sticker_05.png" alt="" style="right:-54px; top:170px; width:40px; animation-duration:3.2s; animation-delay:1.8s;">
-          <img class="sticker" src="images/stickers/sticker_32.png" alt="" style="left:-34px; bottom:16px; width:36px; animation-duration:4.2s; animation-delay:.3s;">
-          <img class="sticker" src="images/stickers/sticker_25.png" alt="" style="right:-36px; bottom:30px; width:42px; animation-duration:3.6s; animation-delay:1.5s;">
+          <img class="sticker" src="images/stickers/sticker_06.png" alt="" style="left:-44px; top:26px; animation-duration:3.4s; animation-delay:0s;">
+          <img class="sticker" src="images/stickers/sticker_18.png" alt="" style="right:-46px; top:66px; animation-duration:4s; animation-delay:.6s;">
+          <img class="sticker" src="images/stickers/sticker_23.png" alt="" style="left:-56px; top:150px; animation-duration:3.8s; animation-delay:1.2s;">
+          <img class="sticker" src="images/stickers/sticker_05.png" alt="" style="right:-54px; top:170px; animation-duration:3.2s; animation-delay:1.8s;">
+          <img class="sticker" src="images/stickers/sticker_32.png" alt="" style="left:-34px; bottom:16px; animation-duration:4.2s; animation-delay:.3s;">
+          <img class="sticker" src="images/stickers/sticker_25.png" alt="" style="right:-36px; bottom:30px; animation-duration:3.6s; animation-delay:1.5s;">
         </div>
       </div>
       <div class="fold" id="coverFold"><div class="curl"></div></div>
